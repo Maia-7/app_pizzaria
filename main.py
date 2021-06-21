@@ -572,19 +572,18 @@ while True:
 		else:
 			Cliente.atualizar(novo_nome, novo_endereco, novo_bairro, nome)
 			sg.Popup('Dados atualizados com sucesso', keep_on_top=True)
-		if event == '-CADASTRAR-' or event == '-ATUALIZAR-':
-			janela2.close()
-			if pedido_atual == []:
-				janela.close()
-				janela = clientes()
-			else:
-				pedido_atual.insert(0, values['nome'])
-				cliente_selecionado = True
-				sg.Popup('Item adicionado ao pedido', keep_on_top=True)
-				janela3.close()
-				janela.close()
-				janela = menu()
-				memoria_janelas2 = []
+		janela2.close()
+		if pedido_atual == []:
+			janela.close()
+			janela = clientes()
+		else:
+			pedido_atual.insert(0, values['nome'].title())
+			cliente_selecionado = True
+			sg.Popup('Item adicionado ao pedido', keep_on_top=True)
+			janela3.close()
+			janela.close()
+			janela = menu()
+			memoria_janelas2 = []
 	elif event == '-CANCELAR-':
 		if cancelar_pedido_aberto == True:
 			cancelar_pedido_aberto = False
@@ -633,6 +632,8 @@ while True:
 						del(pedidos_pendentes[i])
 				pedido_atual = []
 				janela2.close()
+				alterando_pedido = False
+				pedido_alterado = False
 				sg.Popup('Pedido fechado com sucesso.', keep_on_top=True)
 				janela.close()
 				fechar_pedido_aberto = False

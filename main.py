@@ -4,6 +4,8 @@ import sqlite3
 import string
 from datetime import date
 
+# cada vez que aperto o botão adicionar, na tela visualizar pedido, um novo pedido é adicionado à sacola até que eu volte à tela pedidos
+
 def dados_pagina_visualizar(retornar_nome=False):
 	def montar_checkbox(item):
 		total = 0
@@ -17,7 +19,7 @@ def dados_pagina_visualizar(retornar_nome=False):
 						linha = f'{v[0]} {v[1]} R$ {v[2]:.2f}'
 						elemento = [sg.Checkbox(linha, key=chave)]
 						pedido.append(elemento)
-						if event != '-EXCLUIR_ITEM-':
+						if event != '-EXCLUIR_ITEM-' and event != '-VOLTAR-':
 							pedido_atual.append(v)
 						if len(linha) > x:
 							x = len(linha)
@@ -51,12 +53,16 @@ def voltar():
 	janela = memoria_janelas[-1]()
 
 def menu():
-	val1, val2 = True, False
+	val1, val2, val3 = True, False, False
 
 	if cliente_selecionado:
-		val1, val2 = False, True
-	if alterando_pedido and pedido_alterado == False:
-		val1 = val2
+		val1, val2, val3 = False, True, True
+	if alterando_pedido:
+		val1 = True
+		if not pedido_alterado:
+			val3 = False
+		else:
+			val1 = False
 
 	layout = [
 		[sg.Button('Pizzas', key='-PIZZAS-')],
@@ -64,7 +70,7 @@ def menu():
 		[sg.Text()],
 		[sg.Button('Sacola', visible=val2, key='-SACOLA-')],
 		[sg.Button('Cancelar pedido', button_color='darkgoldenrod', key='-CANCELAR_PEDIDO-', visible=val2), sg.Button(
-			'Finalizar pedido', button_color='green', visible=val2, key='-FINALIZAR-')],
+			'Finalizar pedido', button_color='green', visible=val3, key='-FINALIZAR-')],
 		[sg.Button('Voltar', key='-VOLTAR-', visible=val1)],
 	]
 	return sg.Window('menu', layout, finalize=True)
@@ -285,7 +291,7 @@ def pedir():
 		[sg.Text(texto1)],
 		[sg.Text(texto2, visible=visivel)],
 		[sg.Text(f'Preço: R$ {preco:,.2f}')],
-		[sg.Text('Quantidade'), sg.Combo(values=list(range(1, 100)), default_value=1, key='-QUANTIDADE-')],
+		[sg.Text('Quantidade'), sg.Spin([i for i in range(1, 31)], initial_value=1, size=(2, 1), key='-QUANTIDADE-')],
 		[sg.Text('Observações:', visible=visivel), sg.Input(key='-OBS-', visible=visivel)],
 		[sg.Text('Selecione as opções desejadas abaixo.', visible=visivel)],
 		[sg.Checkbox('Borda recheada', key='-BORDA-', visible=visivel)],
@@ -371,15 +377,20 @@ while True:
 					if type(memoria_janelas[-1]) == dict:
 						pedido_atual = []
 						alterando_pedido = cliente_selecionado = False
-					memoria_janelas.pop()
+						memoria_janelas.pop()
+						janela.close()
+					else:
+						memoria_janelas.pop()
+						janela.close()
+					if type(memoria_janelas[-1]) == str:
+						janela = produtos(memoria_janelas[-1])
+					elif type(memoria_janelas[-1]) == dict:
+						janela = list(memoria_janelas[-1].values())[0]()
+					else:
+						janela = memoria_janelas[-1]()
 				else:
 					memoria_janelas.append(lista_valores_janelas[i])
-				janela.close()
-				if event == '-VOLTAR-' and type(memoria_janelas[-1]) == str:
-					janela = produtos(memoria_janelas[-1])
-				elif event == '-VOLTAR-' and type(memoria_janelas[-1]) == dict:
-					janela = list(memoria_janelas[-1].values())[0]()
-				else:
+					janela.close()
 					janela = memoria_janelas[-1]()
 	elif event in chaves_pizzas or event in chaves_bebidas:
 		item = (event[1:-1].lower(),)
@@ -435,8 +446,8 @@ while True:
 		valores = list(values.values())
 		selecionado = False
 		contador = 0
-		if alterando_pedido:
-			pedido_alterado = True
+		'''if alterando_pedido:
+			pedido_alterado = True'''
 		if True in valores:
 			selecionado = True
 			contador = valores.count(True)
@@ -456,6 +467,7 @@ while True:
 			janela.close()
 			if sacola_aberta:
 				janela = sacola()
+				pedido_alterado = True
 			else:
 				janela = visualizar_pedido()
 	elif event == '-ADICIONAR_ITEM2-':
@@ -474,7 +486,7 @@ while True:
 		else:
 			pedidos_pendentes.append(pedido_atual)	
 		pedido_atual = []
-		cliente_selecionado = alterando_pedido = pedido_alterado = sacola_aberta = False		 
+		cliente_selecionado = alterando_pedido = pedido_alterado = sacola_aberta = pedido_alterado = False		 
 		sg.Popup('Pedido Finalizado', keep_on_top=True)
 		janela.close()
 		memoria_janelas = [tela_inicial]
@@ -583,6 +595,7 @@ while True:
 			janela3.close()
 			janela.close()
 			janela = menu()
+			del memoria_janelas[2:]
 			memoria_janelas2 = []
 	elif event == '-CANCELAR-':
 		if cancelar_pedido_aberto == True:

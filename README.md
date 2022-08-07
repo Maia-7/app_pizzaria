@@ -2,9 +2,9 @@
 <p>Desenvolvi esse aplicativo em 2021 e foi a primeira ideia que tirei do papel para praticar meus conhecimentos em programação. O objetivo era simular um software de gerenciamento de pedidos de pizzarias.</p>
 <h2>Tecnologias</h2>
 <ul>
-  <li><a href="https://python.org.br/">Python</a>: Linguagem de Programção</li>
-  <li><a href="https://www.sqlite.org/index.html">SQLite</a>: Banco de dados relacional</li>
-  <li><a href="https://www.pysimplegui.org/en/latest/">PySimpleGUI</a>: Biblioteca para criação de interfaces gráficas</li>
+  <li><a href="https://python.org.br/" target="_blank" rel="noopener noreferrer">Python</a>: Linguagem de Programção</li>
+  <li><a href="https://www.sqlite.org/index.html" target="_blank" rel="noopener noreferrer">SQLite</a>: Banco de dados relacional</li>
+  <li><a href="https://www.pysimplegui.org/en/latest/" target="_blank" rel="noopener noreferrer">PySimpleGUI</a>: Biblioteca para criação de interfaces gráficas</li>
 </ul>
 <h2>Instalando a biblioteca e executando o programa</h2>
 <ol>

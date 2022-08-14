@@ -8,7 +8,7 @@
 </ul>
 <h2>Instalando a biblioteca e executando o programa</h2>
 <ol>
-  <li>Clone o repositório ou faça o download da pasta zipada e extrai os arquivos.</li>
+  <li>Clone o repositório ou faça o download da pasta zipada e extraia os arquivos.</li>
   <li><p>Instale o PySimpleGUI com o seguinte comando:</p>
     <code>pip install pysimplegui</code></li>
   <li><p>Dentro do diretório, execute o arquivo main.py com o seguinte comando:</p>
